@@ -53,6 +53,22 @@ public class TranslationBody
 
     public TranslationItem? GetTranslationItem(string name, string? property)
     {
-        return TranslationItems.Find(t => t.Name is not null && t.Name.TrimStart('_') == name.TrimStart('_') && t.Property == property);
+        ReadOnlySpan<char> trimmedName = name.AsSpan().TrimStart('_');
+
+        foreach (TranslationItem item in TranslationItems)
+        {
+            if (item.Name is null || item.Property != property)
+            {
+                continue;
+            }
+
+            ReadOnlySpan<char> trimmedItemName = item.Name.AsSpan().TrimStart('_');
+            if (trimmedItemName.SequenceEqual(trimmedName))
+            {
+                return item;
+            }
+        }
+
+        return null;
     }
 }
