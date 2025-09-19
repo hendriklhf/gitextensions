@@ -305,6 +305,15 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
             return segment;
         }
 
-        return Segments.FirstOrDefault(s => s.Child == Revision, defaultValue: segment);
+        for (int i = 0; i < Segments.Count; i++)
+        {
+            RevisionGraphSegment current = Segments[i];
+            if (current.Child == Revision)
+            {
+                return current;
+            }
+        }
+
+        return segment;
     }
 }
